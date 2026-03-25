@@ -434,6 +434,8 @@ export default {
       editUsername_title: '编辑用户名',
       emptyTrash: '清空回收站',
       emptyTrash_title: '清空回收站',
+      export: '导出',
+      export_title: '导出',
       import: '导入',
       join: '加入',
       leave: '离开',

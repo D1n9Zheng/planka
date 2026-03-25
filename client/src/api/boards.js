@@ -7,6 +7,7 @@ import http from './http';
 import socket from './socket';
 import { transformCard } from './cards';
 import { transformAttachment } from './attachments';
+import Config from '../constants/Config';
 
 /* Actions */
 
@@ -32,10 +33,27 @@ const updateBoard = (id, data, headers) => socket.patch(`/boards/${id}`, data, h
 
 const deleteBoard = (id, headers) => socket.delete(`/boards/${id}`, undefined, headers);
 
+const exportBoard = (id, headers) => {
+  return fetch(`${Config.BASE_PATH}/api/boards/${id}/export`, {
+    method: 'GET',
+    headers,
+    credentials: 'include',
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error('Export failed');
+    }
+    return response.json().then((body) => ({
+      ...body,
+      headers: response.headers,
+    }));
+  });
+};
+
 export default {
   createBoard,
   createBoardWithImport,
   getBoard,
   updateBoard,
   deleteBoard,
+  exportBoard,
 };

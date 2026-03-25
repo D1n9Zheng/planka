@@ -458,6 +458,8 @@ export default {
       editUsername_title: 'Edit Username',
       emptyTrash: 'Empty trash',
       emptyTrash_title: 'Empty Trash',
+      export: 'Export',
+      export_title: 'Export',
       import: 'Import',
       join: 'Join',
       leave: 'Leave',

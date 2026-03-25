@@ -12,6 +12,7 @@ import { Popup } from '../../../../lib/custom-ui';
 
 import selectors from '../../../../selectors';
 import entryActions from '../../../../entry-actions';
+import api from '../../../../api';
 import { useSteps } from '../../../../hooks';
 import { BoardContexts, BoardMembershipRoles } from '../../../../constants/Enums';
 import { BoardContextIcons } from '../../../../constants/Icons';
@@ -87,6 +88,23 @@ const ActionsStep = React.memo(({ onClose }) => {
     openStep(StepTypes.EMPTY_TRASH);
   }, [openStep]);
 
+  const handleExportClick = useCallback(() => {
+    api.exportBoard(board.id).then((data) => {
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `board-export-${board.name.replace(/[^a-z0-9]/gi, '-')}-${Date.now()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      onClose();
+    });
+  }, [board.id, board.name, onClose]);
+
   if (step) {
     switch (step.type) {
       case StepTypes.CUSTOM_FIELD_GROUPS:
@@ -136,6 +154,12 @@ const ActionsStep = React.memo(({ onClose }) => {
           <Menu.Item className={styles.menuItem} onClick={handleActivitiesClick}>
             <Icon name="list ul" className={styles.menuItemIcon} />
             {t('common.actions', {
+              context: 'title',
+            })}
+          </Menu.Item>
+          <Menu.Item className={styles.menuItem} onClick={handleExportClick}>
+            <Icon name="download" className={styles.menuItemIcon} />
+            {t('action.export', {
               context: 'title',
             })}
           </Menu.Item>
