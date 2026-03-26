@@ -31,7 +31,11 @@ module.exports = {
     const taskLists = await TaskList.qm.getByCardIds(cardIds);
     const taskListIds = sails.helpers.utils.mapRecords(taskLists);
     const tasks = await Task.qm.getByTaskListIds(taskListIds);
-    const comments = await Comment.qm.getByCardIds(cardIds);
+    const comments = await Comment.find({
+      cardId: {
+        in: cardIds,
+      },
+    });
     const labels = await Label.qm.getByBoardId(board.id);
 
     // Get all users involved
